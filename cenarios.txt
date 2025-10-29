@@ -1,0 +1,93 @@
+Feature: Gestão de Produtos no site Commit Quality
+  Como um usuário do sistema
+  Quero gerenciar produtos através da aplicação
+  Para que eu possa cadastrar, visualizar e filtrar produtos
+
+  # =======================
+  # LISTAGEM DE PRODUTOS
+  # =======================
+  Scenario: Visualizar a lista de produtos cadastrados
+    Given que o usuário acessa a página de "Products"
+    When a página é carregada
+    Then deve exibir uma tabela com os produtos existentes
+    And cada produto deve conter as colunas "ID", "Name", "Price" e "Date Stocked"
+    And o botão "Show More" deve estar visível
+
+  Scenario: Filtrar produtos por nome
+    Given que o usuário está na página de "Products"
+    When ele digita o nome de um produto existente no campo "Filter by product name"
+    And clica no botão "Filter"
+    Then apenas os produtos com o nome informado devem ser exibidos na tabela
+
+  Scenario: Limpar filtro de pesquisa
+    Given que o usuário aplicou um filtro de produto
+    When ele clica no botão "Reset"
+    Then a lista completa de produtos deve ser exibida novamente
+
+  Scenario: Exibir mais produtos na lista
+    Given que o usuário está visualizando a tabela de produtos
+    When ele clica no botão "Show More"
+    Then deve ser carregada uma nova página ou mais registros na listagem de produtos
+
+  Scenario: Navegar para a tela de adicionar produto
+    Given que o usuário está na tela de "Products"
+    When ele clica no botão "Add a Product"
+    Then ele deve ser redirecionado para a tela de "Add Product"
+
+  # =======================
+  # ADIÇÃO DE PRODUTO
+  # =======================
+  Scenario: Acessar a tela de adicionar produto
+    Given que o usuário está logado ou tem acesso à aplicação
+    When ele clica no menu "Add Product"
+    Then a página "Add Product" deve ser exibida
+    And deve conter os campos "Name", "Price" e "Date Stocked"
+    And o botão "Submit" deve estar disponível
+
+  Scenario: Adicionar um produto com dados válidos
+    Given que o usuário está na página "Add Product"
+    When ele preenche o campo "Name" com "Produto Teste"
+    And o campo "Price" com "25"
+    And seleciona uma data válida em "Date Stocked"
+    And clica no botão "Submit"
+    Then o sistema deve cadastrar o novo produto com sucesso
+    And o usuário deve ser redirecionado para a tela de listagem com o novo produto exibido
+
+  Scenario: Cancelar o cadastro de produto
+    Given que o usuário está na página "Add Product"
+    When ele clica no link "cancel"
+    Then ele deve ser redirecionado para a tela de listagem de produtos sem salvar as informações
+
+  Scenario: Tentar adicionar um produto sem preencher campos obrigatórios
+    Given que o usuário está na página "Add Product"
+    When ele deixa um ou mais campos obrigatórios vazios
+    And clica no botão "Submit"
+    Then o sistema deve exibir uma mensagem de erro informando que todos os campos são obrigatórios
+
+  # =======================
+  # LOGIN
+  # =======================
+  Scenario: Acessar a tela de login
+    Given que o usuário acessa o menu "Login"
+    When a página é carregada
+    Then deve exibir os campos "Username" e "Password"
+    And o botão "Login" deve estar visível
+
+  Scenario: Login com credenciais válidas
+    Given que o usuário está na tela de "Login"
+    When ele preenche "Username" e "Password" com credenciais válidas
+    And clica no botão "Login"
+    Then o sistema deve autenticar o usuário com sucesso
+    And deve redirecioná-lo para a tela inicial ou dashboard
+
+  Scenario: Login com credenciais inválidas
+    Given que o usuário está na tela de "Login"
+    When ele informa um nome de usuário ou senha incorretos
+    And clica no botão "Login"
+    Then o sistema deve exibir uma mensagem de erro informando "Invalid credentials" ou similar
+
+  Scenario: Tentativa de login sem preencher campos
+    Given que o usuário está na tela de "Login"
+    When ele deixa os campos "Username" e "Password" vazios
+    And clica no botão "Login"
+    Then o sistema deve exibir mensagens de validação informando que os campos são obrigatórios

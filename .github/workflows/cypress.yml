@@ -1,33 +1,36 @@
 name: 🚀 Cypress Tests
 
 on:
-  workflow_dispatch: # Permite rodar manualmente
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+  workflow_dispatch:   # Permite execução manual
+  push:                # Executa ao fazer push
+    branches:
+      - main
+  pull_request:        # Executa em PRs para main
 
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout do repositório
+      - name: 🔄 Checkout do repositório
         uses: actions/checkout@v4
 
-      - name: ⚙️ Instala Node.js
+      - name: ⚙️ Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: 📦 Instala dependências
-        run: npm install
+      - name: 📦 Instalar dependências
+        run: npm ci
 
-      - name: 🧪 Executa testes com Cypress
-        run: npm run test:report
+      - name: 🧪 Executar testes Cypress em modo headless
+        run: |
+          npx cypress run --headless \
+            --reporter mochawesome \
+            --reporter-options reportDir=cypress/reports/mochawesome-report,overwrite=false,html=true,json=true
 
-      - name: 📊 Upload dos relatórios Mochawesome
-        if: always()
+      - name: 📁 Publicar relatório Mochawesome
+        if: always() # Mesmo que os testes falhem, faz upload do relatório
         uses: actions/upload-artifact@v4
         with:
           name: mochawesome-report

@@ -1,11 +1,16 @@
 name: 🚀 Cypress Tests
 
 on:
-  workflow_dispatch:   # Permite execução manual
-  push:                # Executa ao fazer push
+  # Permite executar manualmente pelo GitHub Actions
+  workflow_dispatch:
+
+  # Executa automaticamente em cada push ou PR na branch main
+  push:
     branches:
       - main
-  pull_request:        # Executa em PRs para main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   cypress-run:
